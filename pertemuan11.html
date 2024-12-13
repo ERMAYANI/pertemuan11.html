@@ -5,86 +5,107 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bootstrap demo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <style>
+    .judul{
+      text-align: right;
+      font-size: 20px;
+      font-weight: bold;
+      text-shadow: 2px 2px 10px #000;
+      color: rgb(43, 189, 226);
+    }
+    .deskripsi{
+      text-align: justify;
+      font-size: 15px;
+
+    }
+    
+
+    
+  </style>
   </head>
   <body>
     
     <div class="container">
-        <h3>Konversi Celcius Fahrenheit</h3>
+
         <div class="row">
-            <div class="col">
-                <label for="InputC" class="form-label">°Celcius</label>
-                <input type="text" id="nC" class="form-control">
+            <div class="col-6"> 
+              <div id="judul" class="judul">isi judul-judulan</div>
+              <div id="deskripsi" class="deskripsi">Deskripsi</div>
+              <div class="project">
+                <a href="#produk" class="btn btn-warning">cek produk</a>
+
+              </div>
             </div>
             <div class="col">
-               <label for="InputF" class="form-label">°Fahrenheit</label>
-                <input type="text" id="nF" class="form-control"> 
-            </div>
-            <div class="row"> 
-                <div class="col"> 
-                <select id="pilih" class="form-select">
-                    <option value="-" disabled>pilih jenis conversi</option>
-                    <option value="c2f">Celcius -> Fahrenheit</option>
-                    <option value="f2c"Fahrenheit -> Celcius</option>
-                </select>
-            </div>
-                </div>
-            <div class="col">
-                <button id="cmdKonvert" class="btn btn-warning"> Konvert </button>
+                <div id="carouselExample" class="carousel slide">
+                    <div class="carousel-inner" id="sliderimg"></div>
+                      
+                      
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Next</span>
+                    </button>
+                  </div>
             </div>
         </div>
-    </div>
+
+        <div class="produk">
+          <a name="produk"></a>
+        </div>
+
+        <footer class="text-muted" style="clear:both;">
+        <a href="#">top</a>
+        <p id="kopirig">Copyright 2024</p>
         
+
+      </footer>
+
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script>
-        $(function(){
-            $("#pilih option[value=-]").attr('selected','selected')
-            var hsl = 0
-            var pil = "-"
-            $("#nC").prop("disabled",true)
-            $("#nF").prop("disabled",true)
+    <script>  
+           $(function(){
+            var URLAPI = "https://apimhstiki.ptov.my.id"
+            var NIM = "2401010278"
 
-            $("select").on("change",function(){
-                let pil = $("select").val()
+            $.ajax({
+            url: URLAPI+'/slideshow/' +NIM,
+            method: 'GET',
+            dataType: 'json',
+            success:function(dta){
+              $("#judul").html(dta.judul)
+              $("#deskripsi").html(dta.deskripsi)
+              $("#kopirig").html("copyright 2024 &copy; "+dta.judul+" by "+dta.nama)
 
-                //console.log(" debug Nilai pil: "+pil)
-                if(pil=="c2f"){
-                    $("#nC").prop("disabled",false)
-                    $("#nF").prop("disabled",true)
+              var slideimg = ""
 
-                }
-                if(pil=="f2c"){
-                    $("#nF").prop("disabled",true)
-                    $("#nF").prop("disabled",false)
-
-
-                }
+              dta.images.forEach(function(image, index){
+                var aktif = index === 0 ? `active` : ''
+                 slideimg += `
+               <div class="carousel-item ${aktif}">
+               <img src="${image.url}"  class="d-block w-100" alt="${image.alt}">
+             </div>`
             })
             
-        })
-    
-        $(function(){
+            $("#sliderimg").html(slideimg)
 
-        })
-        $("#cmdKonvert").on('click',function(){
-            if(pil=="c2f"){
-            let ncel = $("#nC").val()
-            hsl = 9/5*ncl+32
-            $("nF").val(hsl)
+            },
+            error:function(xhr, status, error){
+                console.log('Ajax Error: ',status, error)
             }
-        }else{
-            let nFah = $("#nF").val()
-            hsl = 5/9*(nFah-32)
-            $("#nC").val(hsl)
+        
+            
+
+            })
+            
+
+            
         })
-
-
-        
-        
-
-        
-
     </script>
 </body>
 </html>
